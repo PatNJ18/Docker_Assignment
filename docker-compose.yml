@@ -1,0 +1,47 @@
+services:
+  api-dev:
+    build: ./api
+    links:
+      - db-dev
+    ports:
+      - "8081:5000"
+
+    environment:
+      - HOST=db-dev
+
+    depends_on:
+      - db-dev
+
+  db-dev:
+    build: ./db
+    ports:
+      - "32000:3306"
+
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+
+    volumes:
+      - ./admin/db4dev:/var/lib/mysql
+
+  api-test:
+    build: ./api
+    links:
+      - db-test
+    ports:
+      - "8082:5000"
+
+    environment:
+      - HOST=db-test
+    depends_on:
+      - db-test
+
+  db-test:
+    build: ./db
+    ports:
+      - "31000:3306"
+
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+
+    volumes:
+      - ./admin/db4test:/var/lib/mysql
